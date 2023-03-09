@@ -33,3 +33,6 @@
 
 # imGUI 
 *.ini
+
+#vscode
+*.vscode
