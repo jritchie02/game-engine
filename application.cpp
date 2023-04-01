@@ -70,7 +70,7 @@ void Application::input(Board &board)
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            sf::Vector2i position = sf::Mouse::getPosition();
+            sf::Vector2i position = sf::Mouse::getPosition(m_window);
             board.drawTile(position.x, position.y);
         }
     }
