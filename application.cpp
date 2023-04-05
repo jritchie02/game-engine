@@ -4,7 +4,6 @@ bool Application::loop()
 {
 
     ImGui::SFML::Init(m_window);
-
     Board board = Board(m_window);
 
     sf::Clock deltaClock;
@@ -75,7 +74,7 @@ void Application::input(Board &board)
             m_window.close();
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
         {
             sf::Vector2i position = sf::Mouse::getPosition(m_window);
             board.drawTile(position.x, position.y);
