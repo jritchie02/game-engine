@@ -3,12 +3,15 @@
 
 #include "include/imgui.h"
 #include "include/imgui-SFML.h"
+#include "spritesheet.hpp"
 #include "tiles.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 class Application
 {
@@ -23,7 +26,8 @@ private:
     void input(Board &board);
     void gui(Board &board);
     void update();
-    void render(Board &board);
+    void render(Board &board, SpriteSheet &sheet);
+    void drawImage();
 
     sf::RenderWindow m_window;
 };
