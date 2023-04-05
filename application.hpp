@@ -20,7 +20,7 @@ public:
     {
         m_window.setFramerateLimit(60);
     }
-    void loop();
+    bool loop();
 
 private:
     void input(Board &board);

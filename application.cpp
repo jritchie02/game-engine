@@ -1,6 +1,6 @@
 #include "application.hpp"
 
-void Application::loop()
+bool Application::loop()
 {
 
     ImGui::SFML::Init(m_window);
@@ -12,7 +12,9 @@ void Application::loop()
 
     // create the tilemap from the level definition
     SpriteSheet map;
-    map.load("TileSet1.png", sf::Vector2u(32, 32), 30, 30);
+    if (!map.load("TileSet1.png", sf::Vector2u(32, 32), 30, 30)) {
+        return false;
+    }
 
     while (m_window.isOpen())
     {
@@ -29,6 +31,7 @@ void Application::loop()
     }
 
     ImGui::SFML::Shutdown();
+    return true;
 }
 
 void Application::gui(Board &board)
@@ -84,12 +87,12 @@ void Application::update()
 {
 }
 
-void Application::render(Board &board, Spritesheet &sheet)
+void Application::render(Board &board, SpriteSheet &sheet)
 {
     m_window.clear();
     // Call board functions
     board.drawWireframe();
-    m_window.draw(map);
+    m_window.draw(sheet);
     ImGui::SFML::Render(m_window);
     m_window.display();
 }
