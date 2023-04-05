@@ -11,8 +11,26 @@ bool Application::loop()
 
     // create the tilemap from the level definition
     SpriteSheet map;
-    if (!map.load("TileSet1.png", sf::Vector2u(32, 32), 30, 30)) {
+    if (!map.load("TileSet1.png", sf::Vector2u(32, 32), 30, 30))
+    {
         return false;
+    }
+
+    if (!m_tilesetTexture.loadFromFile("TileSet1.png"))
+    {
+        // handle error loading the tileset image
+        // TODO
+    }
+
+    for (int row = 0; row < m_tileset_rows; ++row)
+    {
+        for (int col = 0; col < m_tileset_col; ++col)
+        {
+            sf::IntRect tileRect(col * m_tile_size, row * m_tile_size, m_tile_size, m_tile_size);
+            m_tileSprites[row * m_tileset_col + col].setTexture(m_tilesetTexture);
+            m_tileSprites[row * m_tileset_col + col].setTextureRect(tileRect);
+            m_tileSprites[row * m_tileset_col + col].setPosition(col * m_tile_size, row * m_tile_size);
+        }
     }
 
     while (m_window.isOpen())
@@ -22,8 +40,8 @@ bool Application::loop()
 
         // Update GUI
         ImGui::SFML::Update(m_window, deltaClock.restart());
-        ImGui::ShowDemoWindow();
-        // Render GUI
+        // ImGui::ShowDemoWindow();
+        //  Render GUI
         gui(board);
         // Render SFML
         render(board, map);
@@ -35,6 +53,58 @@ bool Application::loop()
 
 void Application::gui(Board &board)
 {
+    int imageWidth = 0;
+    int imageHeight = 0;
+    char imagePath[255] = {0};
+
+    ImGui::Begin("Import Section");
+
+    ImGui::Text("Enter image details and file path:");
+    ImGui::InputInt("Width", &imageWidth);
+    ImGui::InputInt("Height", &imageHeight);
+    ImGui::InputText("File Path", imagePath, 255);
+
+    if (ImGui::Button("Import Image"))
+    {
+        // Your code to import the image goes here
+    }
+
+    int selectedTile = 2; // -1 indicates no tile is currently selected
+    // Create a child window with scrolling
+    ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+    ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)m_tilesetTexture.getNativeHandle(); // Cast the texture ID to ImTextureID
+    ImVec2 imageSize = ImVec2(m_tile_size, m_tile_size);
+    for (int row = 0; row < m_tileset_rows; row++)
+    {
+        for (int col = 0; col < m_tileset_col; col++)
+        {
+            ImVec2 uv0 = ImVec2(col / (float)m_tileset_col, row / (float)m_tileset_rows);
+            ImVec2 uv1 = ImVec2((col + 1) / (float)m_tileset_col, (row + 1) / (float)m_tileset_rows);
+
+            ImDrawList *drawList = ImGui::GetWindowDrawList();
+            if (selectedTile == row * m_tileset_col + col)
+            {
+                ImVec2 rectMin = ImGui::GetItemRectMin();
+                ImVec2 rectMax = ImGui::GetItemRectMax();
+                ImU32 color = ImColor(255, 255, 255); // white color
+                ImGui::GetWindowDrawList()->AddRect(rectMin, rectMax, color);
+            }
+
+            if (ImGui::IsItemClicked())
+            {
+                selectedTile = row * m_tileset_col + col;
+            }
+
+            ImGui::Image(tilesetTextureId, imageSize, uv0, uv1);
+            ImGui::SameLine(); // move to the next column
+        }
+        ImGui::NewLine(); // move to the next row
+    }
+
+    ImGui::EndChild();
+    ImGui::End();
+    /*
 
     ImGui::Begin("Board Config");
 
@@ -60,6 +130,7 @@ void Application::gui(Board &board)
     }
 
     ImGui::End();
+    */
 }
 
 void Application::input(Board &board)
@@ -91,7 +162,7 @@ void Application::render(Board &board, SpriteSheet &sheet)
     m_window.clear();
     // Call board functions
     board.drawWireframe();
-    m_window.draw(sheet);
+    // m_window.draw(sheet);
     ImGui::SFML::Render(m_window);
     m_window.display();
 }

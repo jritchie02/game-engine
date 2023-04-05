@@ -30,6 +30,14 @@ private:
     void drawImage();
 
     sf::RenderWindow m_window;
+
+    // Rendering spritesheet in imgui
+   
+    sf::Texture m_tilesetTexture;
+    float m_tile_size = 32;
+    int m_tileset_col = 31;
+    int m_tileset_rows = 30;
+    sf::Sprite m_tileSprites[31 * 30];
 };
 
 #endif // APPLICATION_H
