@@ -40,7 +40,7 @@ bool Application::loop()
 
         // Update GUI
         ImGui::SFML::Update(m_window, deltaClock.restart());
-        // ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
         //  Render GUI
         gui(board);
         // Render SFML
@@ -69,40 +69,28 @@ void Application::gui(Board &board)
         // Your code to import the image goes here
     }
 
-    int selectedTile = 2; // -1 indicates no tile is currently selected
     // Create a child window with scrolling
     ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
     ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)m_tilesetTexture.getNativeHandle(); // Cast the texture ID to ImTextureID
     ImVec2 imageSize = ImVec2(m_tile_size, m_tile_size);
+
+    ImGui::BeginTable("TilesetTable", m_tileset_col, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
     for (int row = 0; row < m_tileset_rows; row++)
     {
+        ImGui::TableNextRow();
         for (int col = 0; col < m_tileset_col; col++)
         {
+            ImGui::TableNextColumn();
             ImVec2 uv0 = ImVec2(col / (float)m_tileset_col, row / (float)m_tileset_rows);
             ImVec2 uv1 = ImVec2((col + 1) / (float)m_tileset_col, (row + 1) / (float)m_tileset_rows);
-
-            ImDrawList *drawList = ImGui::GetWindowDrawList();
-            if (selectedTile == row * m_tileset_col + col)
-            {
-                ImVec2 rectMin = ImGui::GetItemRectMin();
-                ImVec2 rectMax = ImGui::GetItemRectMax();
-                ImU32 color = ImColor(255, 255, 255); // white color
-                ImGui::GetWindowDrawList()->AddRect(rectMin, rectMax, color);
-            }
-
-            if (ImGui::IsItemClicked())
-            {
-                selectedTile = row * m_tileset_col + col;
-            }
-
             ImGui::Image(tilesetTextureId, imageSize, uv0, uv1);
-            ImGui::SameLine(); // move to the next column
         }
-        ImGui::NewLine(); // move to the next row
     }
+    ImGui::EndTable();
 
     ImGui::EndChild();
+
     ImGui::End();
     /*
 
