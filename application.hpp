@@ -24,10 +24,9 @@ public:
 
 private:
     void input(Board &board);
-    void gui(Board &board);
+    void gui();
     void update();
     void render(Board &board, SpriteSheet &sheet);
-    void drawImage();
 
     sf::RenderWindow m_window;
 

@@ -3,7 +3,9 @@
 bool Application::loop()
 {
 
-    ImGui::SFML::Init(m_window);
+    if(!ImGui::SFML::Init(m_window)) {
+        // TODO throw error
+    }
     Board board = Board(m_window);
 
     sf::Clock deltaClock;
@@ -16,12 +18,12 @@ bool Application::loop()
         return false;
     }
 
+    // Loading the spritesheet for the GUI
     if (!m_tilesetTexture.loadFromFile("TileSet1.png"))
     {
         // handle error loading the tileset image
         // TODO
     }
-
     for (int row = 0; row < m_tileset_rows; ++row)
     {
         for (int col = 0; col < m_tileset_col; ++col)
@@ -42,7 +44,7 @@ bool Application::loop()
         ImGui::SFML::Update(m_window, deltaClock.restart());
         ImGui::ShowDemoWindow();
         //  Render GUI
-        gui(board);
+        gui();
         // Render SFML
         render(board, map);
     }
@@ -51,7 +53,7 @@ bool Application::loop()
     return true;
 }
 
-void Application::gui(Board &board)
+void Application::gui()
 {
     int imageWidth = 0;
     int imageHeight = 0;
@@ -92,33 +94,6 @@ void Application::gui(Board &board)
     ImGui::EndChild();
 
     ImGui::End();
-    /*
-
-    ImGui::Begin("Board Config");
-
-    // PIXEL SIZE
-    const char *items[] = {"8 pixels", "16 pixels", "32 pixels"};
-    static int item_current = 2;
-    ImGui::Combo("Pixel Size", &item_current, items, IM_ARRAYSIZE(items));
-
-    switch (item_current)
-    {
-    case 0:
-        board.setTileSize(8);
-        break;
-    case 1:
-        board.setTileSize(16);
-        break;
-    case 2:
-        board.setTileSize(32);
-        break;
-    default:
-        // Handle unexpected value
-        break;
-    }
-
-    ImGui::End();
-    */
 }
 
 void Application::input(Board &board)
@@ -145,7 +120,7 @@ void Application::update()
 {
 }
 
-void Application::render(Board &board, SpriteSheet &sheet)
+void Application::render(Board &board, SpriteSheet &)
 {
     m_window.clear();
     // Call board functions
@@ -153,13 +128,4 @@ void Application::render(Board &board, SpriteSheet &sheet)
     // m_window.draw(sheet);
     ImGui::SFML::Render(m_window);
     m_window.display();
-}
-
-void Application::drawImage()
-{
-    sf::Texture texture;
-    texture.loadFromFile("TileSet1.png");
-
-    sf::Sprite sprite(texture);
-    m_window.draw(sprite);
 }
