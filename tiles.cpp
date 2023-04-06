@@ -14,25 +14,39 @@ void Board::setBoardSize(int width, int height)
 
 void Board::initBoard()
 {
+    // Create a single vertex array to represent the entire grid
+    m_grid.setPrimitiveType(sf::Quads);
+
     for (int x = 0; x < m_boardHeight; x++)
     {
         for (int y = 0; y < m_boardWidth; y++)
         {
-            sf::RectangleShape rect(sf::Vector2f(m_tileSize, m_tileSize));
-            rect.setFillColor(sf::Color(68, 68, 68));
-            rect.setOutlineColor(sf::Color(120, 120, 120));
-            rect.setOutlineThickness(1);
-            rect.setPosition(y * m_tileSize, x * m_tileSize);
-            m_tiles.push_back(rect);
-            m_window.draw(rect);
+            // Define the vertices of the current cell
+            sf::Vector2f topLeft(y * m_tileSize, x * m_tileSize);
+            sf::Vector2f topRight((y + 1) * m_tileSize, x * m_tileSize);
+            sf::Vector2f bottomRight((y + 1) * m_tileSize, (x + 1) * m_tileSize);
+            sf::Vector2f bottomLeft(y * m_tileSize, (x + 1) * m_tileSize);
+
+            // Add the vertices of cell with background outline color
+            sf::Color grid_outline_color(50, 50, 50);
+            m_grid.append(sf::Vertex(topLeft, grid_outline_color));
+            m_grid.append(sf::Vertex(topRight, grid_outline_color));
+            m_grid.append(sf::Vertex(bottomRight, grid_outline_color));
+            m_grid.append(sf::Vertex(bottomLeft, grid_outline_color));
+
+            // Add vertices of cell with the cell color
+            sf::Color grid_cell_color(70, 70, 70);
+            m_grid.append(sf::Vertex(sf::Vector2f(topLeft.x + 1, topLeft.y + 1), grid_cell_color));
+            m_grid.append(sf::Vertex(sf::Vector2f(topRight.x - 1, topRight.y + 1) , grid_cell_color));
+            m_grid.append(sf::Vertex(sf::Vector2f(bottomRight.x - 1, bottomRight.y - 1), grid_cell_color));
+            m_grid.append(sf::Vertex(sf::Vector2f(bottomLeft.x + 1, bottomLeft.y - 1), grid_cell_color));
         }
     }
 }
+
 void Board::drawWireframe()
 {
-    for (sf::RectangleShape tile : m_tiles) {
-        m_window.draw(tile);
-    }
+    m_window.draw(m_grid);
 }
 
 void Board::drawTile(int x, int y)

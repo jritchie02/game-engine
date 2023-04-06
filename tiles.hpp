@@ -25,6 +25,7 @@ private:
     int m_boardHeight = 32;
     std::vector<sf::RectangleShape> m_tiles;
     sf::RenderWindow &m_window;
+    sf::VertexArray m_grid;
 };
 
 #endif // BOARD_H
