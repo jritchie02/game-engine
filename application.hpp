@@ -24,19 +24,11 @@ public:
 
 private:
     void input(Board &board);
-    void gui();
+    void gui(SpriteSheet &sprite_sheet);
     void update();
-    void render(Board &board, SpriteSheet &sheet);
+    void render(Board &board);
 
     sf::RenderWindow m_window;
-
-    // Rendering spritesheet in imgui
-   
-    sf::Texture m_tilesetTexture;
-    float m_tile_size = 32;
-    int m_tileset_col = 31;
-    int m_tileset_rows = 30;
-    sf::Sprite m_tileSprites[31 * 30];
 };
 
 #endif // APPLICATION_H

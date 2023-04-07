@@ -1,9 +1,10 @@
 #include "application.hpp"
+#include <iostream>
 
 bool Application::loop()
 {
-
-    if(!ImGui::SFML::Init(m_window)) {
+    if (!ImGui::SFML::Init(m_window))
+    {
         // TODO throw error
     }
     Board board = Board(m_window);
@@ -11,28 +12,11 @@ bool Application::loop()
     sf::Clock deltaClock;
     board.initBoard();
 
-    // create the tilemap from the level definition
-    SpriteSheet map;
-    if (!map.load("TileSet1.png", sf::Vector2u(32, 32), 30, 30))
+    // create spritesheet based on image specs
+    SpriteSheet sprite_sheet("TileSet1.png", 32, 31, 30);
+    if (!sprite_sheet.subdivide())
     {
-        return false;
-    }
-
-    // Loading the spritesheet for the GUI
-    if (!m_tilesetTexture.loadFromFile("TileSet1.png"))
-    {
-        // handle error loading the tileset image
-        // TODO
-    }
-    for (int row = 0; row < m_tileset_rows; ++row)
-    {
-        for (int col = 0; col < m_tileset_col; ++col)
-        {
-            sf::IntRect tileRect(col * m_tile_size, row * m_tile_size, m_tile_size, m_tile_size);
-            m_tileSprites[row * m_tileset_col + col].setTexture(m_tilesetTexture);
-            m_tileSprites[row * m_tileset_col + col].setTextureRect(tileRect);
-            m_tileSprites[row * m_tileset_col + col].setPosition(col * m_tile_size, row * m_tile_size);
-        }
+        // TODO Throw error
     }
 
     while (m_window.isOpen())
@@ -40,20 +24,20 @@ bool Application::loop()
         // Handle Input
         input(board);
 
-        // Update GUI
+        // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
         ImGui::ShowDemoWindow();
         //  Render GUI
-        gui();
+        gui(sprite_sheet);
         // Render SFML
-        render(board, map);
+        render(board);
     }
 
     ImGui::SFML::Shutdown();
     return true;
 }
 
-void Application::gui()
+void Application::gui(SpriteSheet &sprite_sheet)
 {
     int imageWidth = 0;
     int imageHeight = 0;
@@ -74,25 +58,28 @@ void Application::gui()
     // Create a child window with scrolling
     ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-    ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)m_tilesetTexture.getNativeHandle(); // Cast the texture ID to ImTextureID
-    ImVec2 imageSize = ImVec2(m_tile_size, m_tile_size);
+    sf::Texture &tileset_Texture = sprite_sheet.get_tileset_texture();
+    int tileset_cols = sprite_sheet.get_sheet_width();
+    int tileset_rows = sprite_sheet.get_sheet_height();
+    int tile_size = sprite_sheet.get_tile_size();
 
-    ImGui::BeginTable("TilesetTable", m_tileset_col, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
-    for (int row = 0; row < m_tileset_rows; row++)
+    ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)tileset_Texture.getNativeHandle(); // Cast the texture ID to ImTextureID
+    ImVec2 imageSize = ImVec2(tile_size, tile_size);
+
+    ImGui::BeginTable("TilesetTable", tileset_cols, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
+    for (int row = 0; row < tileset_rows; row++)
     {
         ImGui::TableNextRow();
-        for (int col = 0; col < m_tileset_col; col++)
+        for (int col = 0; col < tileset_cols; col++)
         {
             ImGui::TableNextColumn();
-            ImVec2 uv0 = ImVec2(col / (float)m_tileset_col, row / (float)m_tileset_rows);
-            ImVec2 uv1 = ImVec2((col + 1) / (float)m_tileset_col, (row + 1) / (float)m_tileset_rows);
+            ImVec2 uv0 = ImVec2(col / (float)tileset_cols, row / (float)tileset_rows);
+            ImVec2 uv1 = ImVec2((col + 1) / (float)tileset_cols, (row + 1) / (float)tileset_rows);
             ImGui::Image(tilesetTextureId, imageSize, uv0, uv1);
         }
     }
     ImGui::EndTable();
-
     ImGui::EndChild();
-
     ImGui::End();
 }
 
@@ -108,11 +95,14 @@ void Application::input(Board &board)
             m_window.close();
         }
 
+        /*
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
         {
             sf::Vector2i position = sf::Mouse::getPosition(m_window);
             board.drawTile(position.x, position.y);
         }
+        */
     }
 }
 
@@ -120,12 +110,11 @@ void Application::update()
 {
 }
 
-void Application::render(Board &board, SpriteSheet &)
+void Application::render(Board &board)
 {
     m_window.clear();
     // Call board functions
     board.drawWireframe();
-    // m_window.draw(sheet);
     ImGui::SFML::Render(m_window);
     m_window.display();
 }
