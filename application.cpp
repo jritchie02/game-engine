@@ -53,9 +53,6 @@ void Application::gui(SpriteSheet &sprite_sheet)
 
     if (m_imported_sheet)
     {
-        // Your code to import the image goes here
-        // create spritesheet based on image specs
-
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
@@ -67,8 +64,6 @@ void Application::gui(SpriteSheet &sprite_sheet)
         ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)tileset_Texture.getNativeHandle(); // Cast the texture ID to ImTextureID
         ImVec2 imageSize = ImVec2(tile_size, tile_size);
 
-        std::vector<bool> selectedTiles(tileset_cols * tileset_rows);
-
         ImGui::BeginTable("TilesetTable", tileset_cols, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
         for (int row = 0; row < tileset_rows; row++)
         {
@@ -77,18 +72,35 @@ void Application::gui(SpriteSheet &sprite_sheet)
             {
                 ImGui::TableNextColumn();
 
+                // Create a unique ID for the button using row and column indices
+                ImGui::PushID(row * tileset_cols + col);
+
                 ImVec2 uv0 = ImVec2(col / (float)tileset_cols, row / (float)tileset_rows);
                 ImVec2 uv1 = ImVec2((col + 1) / (float)tileset_cols, (row + 1) / (float)tileset_rows);
 
-                bool tileSelected = selectedTiles.at(row * tileset_cols + col);
+                int current_id = row * tileset_cols + col;
+                bool selected = m_selected_tile_id == current_id;
 
-                ImVec4 selectColor = tileSelected ? ImVec4(0.5f, 0.5f, 1.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-
-                if (ImGui::ImageButton((ImTextureID)tilesetTextureId, imageSize, uv0, uv1, -1, ImVec4(0, 0, 0, 1), selectColor))
+                if (selected)
                 {
-                    std::cout << "Selecting button at " << row << " " << col << std::endl;
-                    selectedTiles.at(row * tileset_cols + col) = !selectedTiles.at(row * tileset_cols + col);
+                    // You can adjust the border color and width here
+                    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+                    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 3.0f);
                 }
+
+                if (ImGui::ImageButton((ImTextureID)tilesetTextureId, imageSize, uv0, uv1, 0, ImVec4(0, 0, 0, 1), ImVec4(1, 1, 1, 1)))
+                {
+                    m_selected_tile_id = row * tileset_cols + col;
+                }
+
+                if (selected)
+                {
+                    ImGui::PopStyleColor();
+                    ImGui::PopStyleVar();
+                }
+
+                // Pop the ID after using it for this button
+                ImGui::PopID();
             }
         }
         ImGui::EndTable();
@@ -110,11 +122,10 @@ void Application::input(Board &board, SpriteSheet &sheet)
             m_window.close();
         }
 
-
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
         {
             sf::Vector2i position = sf::Mouse::getPosition(m_window);
-            sheet.add_tile_id(0, position.x, position.y);
+            sheet.add_tile_id(m_selected_tile_id, position.x, position.y);
         }
     }
 }

@@ -30,6 +30,7 @@ private:
 
     sf::RenderWindow m_window;
     bool m_imported_sheet = false;
+    int m_selected_tile_id = 0;
 };
 
 #endif // APPLICATION_H
