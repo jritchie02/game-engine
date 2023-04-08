@@ -12,43 +12,55 @@ bool Application::loop()
     sf::Clock deltaClock;
     board.initBoard();
 
-    SpriteSheet sprite_sheet("TileSet1.png", 32);
-    if (!sprite_sheet.subdivide(board.get_boardWidth(), board.get_boardHeight()))
-    {
-        // TODO Throw error
-    }
-
     while (m_window.isOpen())
     {
         // Handle Input
-        input(board, sprite_sheet);
+        input(board);
 
         // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
-        // ImGui::ShowDemoWindow();
+
         //   Render GUI
-        gui(sprite_sheet);
+        gui(board);
+
         // Render SFML
-        render(board, sprite_sheet);
+        render(board);
     }
 
     ImGui::SFML::Shutdown();
     return true;
 }
 
-void Application::gui(SpriteSheet &sprite_sheet)
+void Application::gui(Board &board)
 {
     ImGui::Begin("Import Section");
 
     ImGui::Text("Enter image tile size in px and file path:");
-    static char buf1[128] = "";
-    ImGui::InputText("File Path", buf1, 128);
-    static char buf2[3] = "";
-    ImGui::InputText("Tile Size (px)", buf2, 3);
+    static char file_path[128] = "";
+    ImGui::InputText("File Path", file_path, 128);
+    static char tile_size[3] = "";
+    ImGui::InputText("Tile Size (px)", tile_size, 3);
 
     if (ImGui::Button("Import Image"))
     {
-        m_imported_sheet = true;
+        try
+        {
+            int tile_size_int = std::stoi(tile_size);
+            SpriteSheet sprite_sheet(file_path, tile_size_int);
+
+            if (!sprite_sheet.import(board.get_boardWidth(), board.get_boardHeight()))
+            {
+                // TODO Throw error
+            }
+
+            m_sprite_sheet = sprite_sheet;
+            m_imported_sheet = true;
+        }
+        catch (const std::invalid_argument &ex)
+        {
+            std::cerr << "Invalid argument: " << ex.what() << std::endl;
+            // Handle the error appropriately, e.g. show an error message, set a default value, etc.
+        }
     }
 
     if (m_imported_sheet)
@@ -56,10 +68,10 @@ void Application::gui(SpriteSheet &sprite_sheet)
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-        sf::Texture &tileset_Texture = sprite_sheet.get_tileset_texture();
-        int tileset_cols = sprite_sheet.get_sheet_width();
-        int tileset_rows = sprite_sheet.get_sheet_height();
-        int tile_size = sprite_sheet.get_tile_size();
+        sf::Texture &tileset_Texture = m_sprite_sheet.get_tileset_texture();
+        int tileset_cols = m_sprite_sheet.get_sheet_width();
+        int tileset_rows = m_sprite_sheet.get_sheet_height();
+        int tile_size = m_sprite_sheet.get_tile_size();
 
         ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)tileset_Texture.getNativeHandle(); // Cast the texture ID to ImTextureID
         ImVec2 imageSize = ImVec2(tile_size, tile_size);
@@ -107,10 +119,15 @@ void Application::gui(SpriteSheet &sprite_sheet)
         ImGui::EndChild();
     }
 
+
+    if (ImGui::Button("Export Image")) {
+        m_sprite_sheet.export_world("ExportedFile.png");
+    }
+
     ImGui::End();
 }
 
-void Application::input(Board &board, SpriteSheet &sheet)
+void Application::input(Board &board)
 {
     sf::Event event;
     while (m_window.pollEvent(event))
@@ -124,8 +141,11 @@ void Application::input(Board &board, SpriteSheet &sheet)
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
         {
-            sf::Vector2i position = sf::Mouse::getPosition(m_window);
-            sheet.add_tile_id(m_selected_tile_id, position.x, position.y);
+            if (m_imported_sheet)
+            {
+                sf::Vector2i position = sf::Mouse::getPosition(m_window);
+                m_sprite_sheet.add_tile_id(m_selected_tile_id, position.x, position.y);
+            }
         }
     }
 }
@@ -134,14 +154,14 @@ void Application::update()
 {
 }
 
-void Application::render(Board &board, SpriteSheet &sheet)
+void Application::render(Board &board)
 {
     m_window.clear();
     // Call board functions
     board.drawWireframe();
 
-    sheet.merge_tiles();
-    m_window.draw(sheet);
+    m_sprite_sheet.merge_tiles();
+    m_window.draw(m_sprite_sheet);
 
     ImGui::SFML::Render(m_window);
     m_window.display();

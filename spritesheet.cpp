@@ -2,7 +2,30 @@
 #include <iostream>
 #include <cmath>
 
-bool SpriteSheet::subdivide(int boardWidth, int boardHeight)
+// Assignment operator
+SpriteSheet &SpriteSheet::operator=(const SpriteSheet &other)
+{
+    if (this == &other)
+    {
+        return *this; // Handle self-assignment
+    }
+
+    // Copy member variables from other object
+    m_tilesetTexture = other.m_tilesetTexture;
+    m_file_name = other.m_file_name;
+    m_tile_size = other.m_tile_size;
+    m_tileset_cols = other.m_tileset_cols;
+    m_tileset_rows = other.m_tileset_rows;
+    m_boardWidth = other.m_boardWidth;
+    m_boardHeight = other.m_boardHeight;
+    m_tile_ids = other.m_tile_ids;
+    m_drawn_tiles = other.m_drawn_tiles;
+
+    // Return *this to allow for chain assignment
+    return *this;
+}
+
+bool SpriteSheet::import(int boardWidth, int boardHeight)
 {
     if (!m_tilesetTexture.loadFromFile(m_file_name))
     {
@@ -74,4 +97,23 @@ void SpriteSheet::add_tile_id(int id, int xpos, int ypos)
     {
         m_tile_ids.at(index) = id;
     }
+}
+
+void SpriteSheet::export_world(std::string file_name)
+{
+    sf::RenderTexture renderTexture;
+    int width = m_boardWidth * m_tile_size;   // Width of the image
+    int height = m_boardHeight * m_tile_size; // Height of the image
+
+
+    renderTexture.create(width, height);
+    renderTexture.setActive(true);               // Activate the render texture
+    renderTexture.clear(sf::Color::Transparent); // Set the clear color to transparent
+    renderTexture.draw(m_drawn_tiles, &m_tilesetTexture);
+    renderTexture.display();
+
+    sf::Texture texture = renderTexture.getTexture();
+    sf::Image image = texture.copyToImage();
+
+    image.saveToFile(file_name);
 }

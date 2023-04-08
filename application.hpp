@@ -23,14 +23,15 @@ public:
     bool loop();
 
 private:
-    void input(Board &board, SpriteSheet &sheet);
-    void gui(SpriteSheet &sprite_sheet);
+    void input(Board &board);
+    void gui(Board &board);
     void update();
-    void render(Board &board, SpriteSheet &sheet);
+    void render(Board &board);
 
     sf::RenderWindow m_window;
     bool m_imported_sheet = false;
     int m_selected_tile_id = 0;
+    SpriteSheet m_sprite_sheet;
 };
 
 #endif // APPLICATION_H

@@ -10,18 +10,21 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp> // TODO remove import
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
 
 class SpriteSheet : public sf::Drawable, public sf::Transformable
 {
 public:
-    SpriteSheet();
-    SpriteSheet(const std::string &file_name, int tile_size)
+    SpriteSheet() = default;
+    SpriteSheet(std::string file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
+    SpriteSheet &operator=(const SpriteSheet &other);
 
-    bool subdivide(int boardWidth, int boardHeight);
+    bool import(int boardWidth, int boardHeight);
     void merge_tiles();
     void add_tile_id(int id, int xpos, int ypos);
+    void export_world(std::string file_name);
 
     // Getters to Access SpriteSheet info
     sf::Texture &get_tileset_texture()
@@ -42,17 +45,17 @@ public:
     }
 
 private:
-    sf::Texture m_tilesetTexture;       // Sprite sheet image texture
-    const std::string &m_file_name;
-    int m_tile_size;                    // width/height of single tile in pixels
+    sf::Texture m_tilesetTexture; // Sprite sheet image texture
+    std::string m_file_name;
+    int m_tile_size; // width/height of single tile in pixels
     int m_tileset_cols;
     int m_tileset_rows;
 
     int m_boardWidth;
     int m_boardHeight;
 
-    std::vector<int> m_tile_ids; 
-    sf::VertexArray m_drawn_tiles;      // Tiles that are drawn by user
+    std::vector<int> m_tile_ids;
+    sf::VertexArray m_drawn_tiles; // Tiles that are drawn by user
 
     // Sprite Sheet V1
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
