@@ -19,8 +19,9 @@ public:
     SpriteSheet(const std::string &file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
 
-    bool subdivide();
-    void draw_board(const int *tiles, int height, int width);
+    bool subdivide(int boardWidth, int boardHeight);
+    void merge_tiles();
+    void add_tile_id(int id, int xpos, int ypos);
 
     // Getters to Access SpriteSheet info
     sf::Texture &get_tileset_texture()
@@ -47,6 +48,10 @@ private:
     int m_tileset_cols;
     int m_tileset_rows;
 
+    int m_boardWidth;
+    int m_boardHeight;
+
+    std::vector<int> m_tile_ids; 
     sf::VertexArray m_drawn_tiles;      // Tiles that are drawn by user
 
     // Sprite Sheet V1

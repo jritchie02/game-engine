@@ -13,7 +13,7 @@ bool Application::loop()
     board.initBoard();
 
     SpriteSheet sprite_sheet("TileSet1.png", 32);
-    if (!sprite_sheet.subdivide())
+    if (!sprite_sheet.subdivide(board.get_boardWidth(), board.get_boardHeight()))
     {
         // TODO Throw error
     }
@@ -21,7 +21,7 @@ bool Application::loop()
     while (m_window.isOpen())
     {
         // Handle Input
-        input(board);
+        input(board, sprite_sheet);
 
         // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
@@ -98,7 +98,7 @@ void Application::gui(SpriteSheet &sprite_sheet)
     ImGui::End();
 }
 
-void Application::input(Board &board)
+void Application::input(Board &board, SpriteSheet &sheet)
 {
     sf::Event event;
     while (m_window.pollEvent(event))
@@ -110,14 +110,12 @@ void Application::input(Board &board)
             m_window.close();
         }
 
-        /*
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
         {
             sf::Vector2i position = sf::Mouse::getPosition(m_window);
-            board.drawTile(position.x, position.y);
+            sheet.add_tile_id(0, position.x, position.y);
         }
-        */
     }
 }
 
@@ -131,10 +129,7 @@ void Application::render(Board &board, SpriteSheet &sheet)
     // Call board functions
     board.drawWireframe();
 
-    const int level[] =
-        {0, 1,
-         30, 3};
-    sheet.draw_board(level, 2, 2);
+    sheet.merge_tiles();
     m_window.draw(sheet);
 
     ImGui::SFML::Render(m_window);

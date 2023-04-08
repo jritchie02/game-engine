@@ -23,7 +23,7 @@ public:
     bool loop();
 
 private:
-    void input(Board &board);
+    void input(Board &board, SpriteSheet &sheet);
     void gui(SpriteSheet &sprite_sheet);
     void update();
     void render(Board &board, SpriteSheet &sheet);

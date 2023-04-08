@@ -19,6 +19,14 @@ public:
     void drawTile(int x, int y);
     void drawWireframe();
 
+    int get_boardWidth() {
+        return m_boardWidth;
+    }
+
+    int get_boardHeight() {
+        return m_boardHeight;
+    }
+
 private:
     int m_tileSize = 32;
     int m_boardWidth = 60;
