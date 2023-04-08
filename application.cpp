@@ -130,10 +130,13 @@ void Application::render(Board &board, SpriteSheet &sheet)
     m_window.clear();
     // Call board functions
     board.drawWireframe();
+
     const int level[] =
-        {0, 0,
-         0, 0};
-    sheet.draw_board(m_window, level, 2, 2);
+        {0, 1,
+         30, 3};
+    sheet.draw_board(level, 2, 2);
+    m_window.draw(sheet);
+
     ImGui::SFML::Render(m_window);
     m_window.display();
 }
