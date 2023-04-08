@@ -26,9 +26,10 @@ private:
     void input(Board &board);
     void gui(SpriteSheet &sprite_sheet);
     void update();
-    void render(Board &board);
+    void render(Board &board, SpriteSheet &sheet);
 
     sf::RenderWindow m_window;
+    bool m_imported_sheet = false;
 };
 
 #endif // APPLICATION_H
