@@ -1,15 +1,15 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 class Board : public sf::Drawable, public sf::Transformable
 {
 public:
-    Board();
+    Board() = default;
 
     Board(int tileSize, int width, int height) : m_tileSize(tileSize), m_boardWidth(width), m_boardHeight(height) {}
 

@@ -8,8 +8,6 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RenderWindow.hpp> // TODO remove import
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <iostream>
 
@@ -19,7 +17,7 @@ public:
     SpriteSheet() = default;
     SpriteSheet(std::string file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
-    SpriteSheet &operator=(const SpriteSheet &other);
+    //SpriteSheet &operator=(const SpriteSheet &other);
 
     bool import(int boardWidth, int boardHeight);
     void merge_tiles();
@@ -57,7 +55,6 @@ private:
     std::vector<int> m_tile_ids;
     sf::VertexArray m_drawn_tiles; // Tiles that are drawn by user
 
-    // Sprite Sheet V1
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
     {
         // apply the transform

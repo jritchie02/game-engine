@@ -7,31 +7,33 @@ bool Application::loop()
     {
         // TODO throw error
     }
-    Board board = Board(32, 60, 32);
-    board.initBoard();
+
+    m_board.initBoard();
     
     sf::Clock deltaClock;
 
     while (m_window.isOpen())
     {
         // Handle Input
-        input(board);
+        if (!input()) {
+            return false;
+        };
 
         // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
 
-        //   Render GUI
-        gui(board);
+        // Render GUI
+        gui();
 
-        // Render SFML
-        render(board);
+        // Render SFML SpriteSheet and Background
+        render();
     }
 
     ImGui::SFML::Shutdown();
     return true;
 }
 
-void Application::gui(Board &board)
+void Application::gui()
 {
     ImGui::Begin("Import Section");
 
@@ -48,7 +50,7 @@ void Application::gui(Board &board)
             int tile_size_int = std::stoi(tile_size);
             SpriteSheet sprite_sheet(file_path, tile_size_int);
 
-            if (!sprite_sheet.import(board.get_boardWidth(), board.get_boardHeight()))
+            if (!sprite_sheet.import(m_board.get_boardWidth(), m_board.get_boardHeight()))
             {
                 std::cout << "Import error" << std::endl; // TODO Throw error
             }
@@ -127,7 +129,7 @@ void Application::gui(Board &board)
     ImGui::End();
 }
 
-void Application::input(Board &board)
+int Application::input()
 {
     sf::Event event;
     while (m_window.pollEvent(event))
@@ -137,6 +139,8 @@ void Application::input(Board &board)
         if (event.type == sf::Event::Closed)
         {
             m_window.close();
+            return false;
+            // TODO exit loop istantly
         }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ImGui::GetIO().WantCaptureMouse)
@@ -148,17 +152,14 @@ void Application::input(Board &board)
             }
         }
     }
+    return true;
 }
 
-void Application::update()
-{
-}
-
-void Application::render(Board &board)
+void Application::render()
 {
     m_window.clear();
 
-    m_window.draw(board);
+    m_window.draw(m_board);
 
     if (m_imported_sheet)
     {

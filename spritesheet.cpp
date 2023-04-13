@@ -3,6 +3,8 @@
 #include <cmath>
 
 // Assignment operator
+/*
+
 SpriteSheet &SpriteSheet::operator=(const SpriteSheet &other)
 {
     if (this == &other)
@@ -24,6 +26,7 @@ SpriteSheet &SpriteSheet::operator=(const SpriteSheet &other)
     // Return *this to allow for chain assignment
     return *this;
 }
+*/
 
 bool SpriteSheet::import(int boardWidth, int boardHeight)
 {
