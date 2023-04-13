@@ -1,21 +1,12 @@
 #include "tiles.hpp"
 #include <iostream>
 
-void Board::setTileSize(int tileSize)
-{
-    m_tileSize = tileSize;
-}
-
-void Board::setBoardSize(int width, int height)
-{
-    m_boardHeight = height;
-    m_boardWidth = width;
-}
-
 void Board::initBoard()
 {
     // Create a single vertex array to represent the entire grid
     m_background.setPrimitiveType(sf::Quads);
+
+    m_tiles.resize(m_boardHeight * m_boardWidth);
 
     for (int x = 0; x < m_boardHeight; x++)
     {
@@ -37,22 +28,9 @@ void Board::initBoard()
             // Add vertices of cell with the cell color
             sf::Color grid_cell_color(30, 48, 74);
             m_background.append(sf::Vertex(sf::Vector2f(topLeft.x + 1, topLeft.y + 1), grid_cell_color));
-            m_background.append(sf::Vertex(sf::Vector2f(topRight.x - 1, topRight.y + 1) , grid_cell_color));
+            m_background.append(sf::Vertex(sf::Vector2f(topRight.x - 1, topRight.y + 1), grid_cell_color));
             m_background.append(sf::Vertex(sf::Vector2f(bottomRight.x - 1, bottomRight.y - 1), grid_cell_color));
             m_background.append(sf::Vertex(sf::Vector2f(bottomLeft.x + 1, bottomLeft.y - 1), grid_cell_color));
         }
     }
-}
-
-void Board::drawWireframe()
-{
-    m_window.draw(m_background);
-}
-
-void Board::drawTile(int x, int y)
-{
-    int relative_x = x / m_tileSize;
-    int relative_y = y / m_tileSize;
-
-    m_tiles.at((relative_y * m_boardWidth) + relative_x).setFillColor(sf::Color(255, 0, 0));
 }

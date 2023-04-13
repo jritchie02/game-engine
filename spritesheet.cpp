@@ -52,7 +52,7 @@ void SpriteSheet::merge_tiles()
     // resize the vertex array to fit the level size
     m_drawn_tiles.setPrimitiveType(sf::Quads);
     m_drawn_tiles.resize(m_boardWidth * m_boardHeight * 4);
-
+   
     // populate the vertex array, with one quad per tile
     for (int i = 0; i < m_boardWidth; ++i)
     {

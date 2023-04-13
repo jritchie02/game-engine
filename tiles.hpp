@@ -3,27 +3,25 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
-class Board
+class Board : public sf::Drawable, public sf::Transformable
 {
 public:
     Board();
 
-    Board(sf::RenderWindow &window) : m_window(window) {}
-
-    Board(int tileSize, int width, int height, sf::RenderWindow &window) : m_tileSize(tileSize), m_boardWidth(width), m_boardHeight(height), m_window(window) {}
+    Board(int tileSize, int width, int height) : m_tileSize(tileSize), m_boardWidth(width), m_boardHeight(height) {}
 
     void initBoard();
-    void setTileSize(int tileSize);
-    void setBoardSize(int width, int height);
-    void drawTile(int x, int y);
-    void drawWireframe();
 
-    int get_boardWidth() {
+    int get_boardWidth()
+    {
         return m_boardWidth;
     }
 
-    int get_boardHeight() {
+    int get_boardHeight()
+    {
         return m_boardHeight;
     }
 
@@ -32,8 +30,16 @@ private:
     int m_boardWidth = 60;
     int m_boardHeight = 32;
     std::vector<sf::RectangleShape> m_tiles;
-    sf::RenderWindow &m_window;
     sf::VertexArray m_background;
+
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
+    {
+        // apply the transform
+        states.transform *= getTransform();
+
+        // draw the vertex array
+        target.draw(m_background, states);
+    }
 };
 
 #endif // BOARD_H

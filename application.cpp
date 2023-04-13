@@ -7,10 +7,10 @@ bool Application::loop()
     {
         // TODO throw error
     }
-    Board board = Board(m_window);
-
-    sf::Clock deltaClock;
+    Board board = Board(32, 60, 32);
     board.initBoard();
+    
+    sf::Clock deltaClock;
 
     while (m_window.isOpen())
     {
@@ -50,7 +50,7 @@ void Application::gui(Board &board)
 
             if (!sprite_sheet.import(board.get_boardWidth(), board.get_boardHeight()))
             {
-                // TODO Throw error
+                std::cout << "Import error" << std::endl; // TODO Throw error
             }
 
             m_sprite_sheet = sprite_sheet;
@@ -119,8 +119,8 @@ void Application::gui(Board &board)
         ImGui::EndChild();
     }
 
-
-    if (ImGui::Button("Export Image")) {
+    if (ImGui::Button("Export Image"))
+    {
         m_sprite_sheet.export_world("ExportedFile.png");
     }
 
@@ -157,11 +157,14 @@ void Application::update()
 void Application::render(Board &board)
 {
     m_window.clear();
-    // Call board functions
-    board.drawWireframe();
 
-    m_sprite_sheet.merge_tiles();
-    m_window.draw(m_sprite_sheet);
+    m_window.draw(board);
+
+    if (m_imported_sheet)
+    {
+        m_sprite_sheet.merge_tiles();
+        m_window.draw(m_sprite_sheet);
+    }
 
     ImGui::SFML::Render(m_window);
     m_window.display();
