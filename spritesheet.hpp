@@ -3,6 +3,7 @@
 #define SPRITESHEET_H
 
 #include "exceptions.hpp"
+#include "board.hpp"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -19,7 +20,7 @@ public:
     SpriteSheet(std::string file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
 
-    bool import(int boardWidth, int boardHeight);
+    bool import(Board& board);
     void merge_tiles();
     void add_tile_id(int id, int xpos, int ypos);
     void export_world(std::string file_name);
@@ -51,6 +52,7 @@ private:
 
     int m_boardWidth;
     int m_boardHeight;
+    int m_board_tileWidth;
 
     std::vector<int> m_tile_ids;
     sf::VertexArray m_drawn_tiles; // Tiles that are drawn by user

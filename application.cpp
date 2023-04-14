@@ -61,7 +61,7 @@ void Application::gui()
             int tile_size_int = std::stoi(tile_size);
             SpriteSheet sprite_sheet(file_path, tile_size_int);
 
-            if (sprite_sheet.import(m_board.get_boardWidth(), m_board.get_boardHeight()))
+            if (sprite_sheet.import(m_board))
             {
                 m_size_error_msg = false;
                 m_file_error_msg = false;
@@ -80,6 +80,11 @@ void Application::gui()
                 m_file_error_msg = true;
             }
         }
+    }
+
+    if (ImGui::Button("Export Image"))
+    {
+        m_sprite_sheet.export_world("ExportedFile.png");
     }
 
     if (m_imported_sheet)
@@ -135,11 +140,6 @@ void Application::gui()
         }
         ImGui::EndTable();
         ImGui::EndChild();
-    }
-
-    if (ImGui::Button("Export Image"))
-    {
-        m_sprite_sheet.export_world("ExportedFile.png");
     }
 
     ImGui::End();

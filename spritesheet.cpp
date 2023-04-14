@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-bool SpriteSheet::import(int boardWidth, int boardHeight)
+bool SpriteSheet::import(Board& board)
 {
 
     if (!m_tilesetTexture.loadFromFile(m_file_name))
@@ -14,10 +14,11 @@ bool SpriteSheet::import(int boardWidth, int boardHeight)
     m_tileset_cols = std::round(m_tilesetTexture.getSize().x / m_tile_size);
     m_tileset_rows = std::round(m_tilesetTexture.getSize().y / m_tile_size);
 
-    m_boardHeight = boardHeight;
-    m_boardWidth = boardWidth;
+    m_boardHeight = board.get_board_height();
+    m_boardWidth = board.get_board_width();
+    m_board_tileWidth = board.get_board_tile_size();
 
-    m_tile_ids.resize(boardWidth * boardHeight, -1);
+    m_tile_ids.resize(m_boardWidth * m_boardHeight, -1);
     return true;
 }
 
@@ -49,10 +50,10 @@ void SpriteSheet::merge_tiles()
                 int tv = id / m_tileset_cols;
 
                 // define its 4 corners
-                quad[0].position = sf::Vector2f(i * m_tile_size, j * m_tile_size);
-                quad[1].position = sf::Vector2f((i + 1) * m_tile_size, j * m_tile_size);
-                quad[2].position = sf::Vector2f((i + 1) * m_tile_size, (j + 1) * m_tile_size);
-                quad[3].position = sf::Vector2f(i * m_tile_size, (j + 1) * m_tile_size);
+                quad[0].position = sf::Vector2f(i * 32, j * 32);
+                quad[1].position = sf::Vector2f((i + 1) * 32, j * 32);
+                quad[2].position = sf::Vector2f((i + 1) * 32, (j + 1) * 32);
+                quad[3].position = sf::Vector2f(i * 32, (j + 1) * 32);
 
                 // define its 4 texture coordinates
                 quad[0].texCoords = sf::Vector2f(tu * m_tile_size, tv * m_tile_size);
@@ -66,8 +67,8 @@ void SpriteSheet::merge_tiles()
 
 void SpriteSheet::add_tile_id(int id, int xpos, int ypos)
 {
-    int tile_x_pos = xpos / m_tile_size;
-    int tile_y_pos = ypos / m_tile_size;
+    int tile_x_pos = xpos / 32;
+    int tile_y_pos = ypos / 32;
 
     int index = tile_x_pos + tile_y_pos * m_boardWidth;
 

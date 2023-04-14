@@ -4,7 +4,7 @@
 #include "include/imgui.h"
 #include "include/imgui-SFML.h"
 #include "spritesheet.hpp"
-#include "tiles.hpp"
+#include "board.hpp"
 #include "exceptions.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>

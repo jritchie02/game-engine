@@ -1,4 +1,4 @@
-#include "tiles.hpp"
+#include "board.hpp"
 #include <iostream>
 
 void Board::initBoard()
@@ -6,17 +6,17 @@ void Board::initBoard()
     // Create a single vertex array to represent the entire grid
     m_background.setPrimitiveType(sf::Quads);
 
-    m_tiles.resize(m_boardHeight * m_boardWidth);
+    m_tiles.resize(m_board_height * m_board_width);
 
-    for (int x = 0; x < m_boardHeight; x++)
+    for (int x = 0; x < m_board_height; x++)
     {
-        for (int y = 0; y < m_boardWidth; y++)
+        for (int y = 0; y < m_board_width; y++)
         {
             // Define the vertices of the current cell
-            sf::Vector2f topLeft(y * m_tileSize, x * m_tileSize);
-            sf::Vector2f topRight((y + 1) * m_tileSize, x * m_tileSize);
-            sf::Vector2f bottomRight((y + 1) * m_tileSize, (x + 1) * m_tileSize);
-            sf::Vector2f bottomLeft(y * m_tileSize, (x + 1) * m_tileSize);
+            sf::Vector2f topLeft(y * m_tile_size, x * m_tile_size);
+            sf::Vector2f topRight((y + 1) * m_tile_size, x * m_tile_size);
+            sf::Vector2f bottomRight((y + 1) * m_tile_size, (x + 1) * m_tile_size);
+            sf::Vector2f bottomLeft(y * m_tile_size, (x + 1) * m_tile_size);
 
             // Add the vertices of cell with background outline color
             sf::Color grid_outline_color(18, 18, 18);
