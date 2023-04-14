@@ -9,13 +9,14 @@ bool Application::loop()
     }
 
     m_board.initBoard();
-    
+
     sf::Clock deltaClock;
 
     while (m_window.isOpen())
     {
         // Handle Input
-        if (!input()) {
+        if (!input())
+        {
             return false;
         };
 
@@ -40,8 +41,18 @@ void Application::gui()
     ImGui::Text("Enter image tile size in px and file path:");
     static char file_path[128] = "";
     ImGui::InputText("File Path", file_path, 128);
+    if (m_file_error_msg)
+    {
+        ImVec4 redColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // Red color (RGBA)
+        ImGui::TextColored(redColor, "Error: %s", "Unable to Open File with given path!");
+    }
     static char tile_size[3] = "";
     ImGui::InputText("Tile Size (px)", tile_size, 3);
+    if (m_size_error_msg)
+    {
+        ImVec4 redColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // Red color (RGBA)
+        ImGui::TextColored(redColor, "Error: %s", "Tile Size should be 8, 16, or 32!");
+    }
 
     if (ImGui::Button("Import Image"))
     {
@@ -50,18 +61,24 @@ void Application::gui()
             int tile_size_int = std::stoi(tile_size);
             SpriteSheet sprite_sheet(file_path, tile_size_int);
 
-            if (!sprite_sheet.import(m_board.get_boardWidth(), m_board.get_boardHeight()))
+            if (sprite_sheet.import(m_board.get_boardWidth(), m_board.get_boardHeight()))
             {
-                std::cout << "Import error" << std::endl; // TODO Throw error
+                m_size_error_msg = false;
+                m_file_error_msg = false;
+                m_sprite_sheet = sprite_sheet;
+                m_imported_sheet = true;
             }
-
-            m_sprite_sheet = sprite_sheet;
-            m_imported_sheet = true;
         }
-        catch (const std::invalid_argument &ex)
+        catch (const std::exception &ex)
         {
-            std::cerr << "Invalid argument: " << ex.what() << std::endl;
-            // Handle the error appropriately, e.g. show an error message, set a default value, etc.
+            if (dynamic_cast<const std::invalid_argument *>(&ex))
+            {
+                m_size_error_msg = true;
+            }
+            if (dynamic_cast<const engine::SpriteError *>(&ex))
+            {
+                m_file_error_msg = true;
+            }
         }
     }
 
@@ -69,7 +86,6 @@ void Application::gui()
     {
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
-
         sf::Texture &tileset_Texture = m_sprite_sheet.get_tileset_texture();
         int tileset_cols = m_sprite_sheet.get_sheet_width();
         int tileset_rows = m_sprite_sheet.get_sheet_height();

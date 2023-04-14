@@ -5,6 +5,7 @@
 #include "include/imgui-SFML.h"
 #include "spritesheet.hpp"
 #include "tiles.hpp"
+#include "exceptions.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
@@ -27,6 +28,8 @@ private:
     SpriteSheet m_sprite_sheet;
     Board m_board;
     bool m_imported_sheet = false;
+    bool m_size_error_msg = false;
+    bool m_file_error_msg = false;
     int m_selected_tile_id = 0;
 };
 

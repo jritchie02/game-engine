@@ -2,6 +2,7 @@
 #ifndef SPRITESHEET_H
 #define SPRITESHEET_H
 
+#include "exceptions.hpp"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -17,7 +18,6 @@ public:
     SpriteSheet() = default;
     SpriteSheet(std::string file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
-    //SpriteSheet &operator=(const SpriteSheet &other);
 
     bool import(int boardWidth, int boardHeight);
     void merge_tiles();

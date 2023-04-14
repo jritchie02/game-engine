@@ -2,37 +2,12 @@
 #include <iostream>
 #include <cmath>
 
-// Assignment operator
-/*
-
-SpriteSheet &SpriteSheet::operator=(const SpriteSheet &other)
-{
-    if (this == &other)
-    {
-        return *this; // Handle self-assignment
-    }
-
-    // Copy member variables from other object
-    m_tilesetTexture = other.m_tilesetTexture;
-    m_file_name = other.m_file_name;
-    m_tile_size = other.m_tile_size;
-    m_tileset_cols = other.m_tileset_cols;
-    m_tileset_rows = other.m_tileset_rows;
-    m_boardWidth = other.m_boardWidth;
-    m_boardHeight = other.m_boardHeight;
-    m_tile_ids = other.m_tile_ids;
-    m_drawn_tiles = other.m_drawn_tiles;
-
-    // Return *this to allow for chain assignment
-    return *this;
-}
-*/
-
 bool SpriteSheet::import(int boardWidth, int boardHeight)
 {
+
     if (!m_tilesetTexture.loadFromFile(m_file_name))
     {
-        return false;
+        throw engine::SpriteError("Invalid File Path!");
         // TODO handle error loading the tileset image
     }
 

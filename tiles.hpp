@@ -32,6 +32,7 @@ private:
     std::vector<sf::RectangleShape> m_tiles;
     sf::VertexArray m_background;
 
+    // mark as override TODO
     virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const
     {
         // apply the transform
