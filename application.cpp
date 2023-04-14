@@ -82,9 +82,12 @@ void Application::gui()
         }
     }
 
+    static char export_path[128] = "";
+    ImGui::InputText("Export File Path", export_path, 128);
+
     if (ImGui::Button("Export Image"))
     {
-        m_sprite_sheet.export_world("ExportedFile.png");
+        m_sprite_sheet.export_world(export_path);
     }
 
     if (m_imported_sheet)
@@ -94,10 +97,10 @@ void Application::gui()
         sf::Texture &tileset_Texture = m_sprite_sheet.get_tileset_texture();
         int tileset_cols = m_sprite_sheet.get_sheet_width();
         int tileset_rows = m_sprite_sheet.get_sheet_height();
-        int tile_size = m_sprite_sheet.get_tile_size();
 
         ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)tileset_Texture.getNativeHandle(); // Cast the texture ID to ImTextureID
-        ImVec2 imageSize = ImVec2(tile_size, tile_size);
+
+        ImVec2 scale_factor = ImVec2(32, 32);
 
         ImGui::BeginTable("TilesetTable", tileset_cols, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
         for (int row = 0; row < tileset_rows; row++)
@@ -123,7 +126,7 @@ void Application::gui()
                     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 3.0f);
                 }
 
-                if (ImGui::ImageButton((ImTextureID)tilesetTextureId, imageSize, uv0, uv1, 0, ImVec4(0, 0, 0, 1), ImVec4(1, 1, 1, 1)))
+                if (ImGui::ImageButton((ImTextureID)tilesetTextureId, scale_factor, uv0, uv1, 0, ImVec4(0, 0, 0, 1), ImVec4(1, 1, 1, 1)))
                 {
                     m_selected_tile_id = row * tileset_cols + col;
                 }

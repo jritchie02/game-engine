@@ -8,7 +8,6 @@ bool SpriteSheet::import(Board& board)
     if (!m_tilesetTexture.loadFromFile(m_file_name))
     {
         throw engine::SpriteError("Invalid File Path!");
-        // TODO handle error loading the tileset image
     }
 
     m_tileset_cols = std::round(m_tilesetTexture.getSize().x / m_tile_size);
@@ -81,8 +80,8 @@ void SpriteSheet::add_tile_id(int id, int xpos, int ypos)
 void SpriteSheet::export_world(std::string file_name)
 {
     sf::RenderTexture renderTexture;
-    int width = m_boardWidth * m_tile_size;   // Width of the image
-    int height = m_boardHeight * m_tile_size; // Height of the image
+    int width = m_boardWidth * m_board_tileWidth;   // Width of the image
+    int height = m_boardHeight * m_board_tileWidth; // Height of the image
 
 
     renderTexture.create(width, height);
