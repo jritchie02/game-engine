@@ -24,6 +24,12 @@ spritesheet.o: spritesheet.cpp spritesheet.hpp
 board.o: board.cpp board.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+test: spritesheet_tests.exe 
+	./spritesheet_tests.exe
+
+spritesheet_tests.exe: spritesheet.cpp spritesheet_tests.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(SFML_LIBS) $(IMGUI_INCLUDE)
+
 .PHONY: clean all
 
 clean:

@@ -22,7 +22,7 @@ bool Application::loop()
 
         // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
-
+       
         // Render GUI
         gui();
 
@@ -94,13 +94,20 @@ void Application::gui()
     {
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+        static int value = 32;          // Initial value
+        const int minValue = 8;  // Minimum value
+        const int maxValue = 64; // Maximum value
+
+        ImGui::SliderInt("Scale", &value, minValue, maxValue);
+
         sf::Texture &tileset_Texture = m_sprite_sheet.get_tileset_texture();
         int tileset_cols = m_sprite_sheet.get_sheet_width();
         int tileset_rows = m_sprite_sheet.get_sheet_height();
 
         ImTextureID tilesetTextureId = (ImTextureID)(intptr_t)tileset_Texture.getNativeHandle(); // Cast the texture ID to ImTextureID
 
-        ImVec2 scale_factor = ImVec2(32, 32);
+        ImVec2 scale_factor = ImVec2(value, value);
 
         ImGui::BeginTable("TilesetTable", tileset_cols, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY);
         for (int row = 0; row < tileset_rows; row++)

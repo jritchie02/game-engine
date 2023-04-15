@@ -16,7 +16,7 @@
 class SpriteSheet : public sf::Drawable, public sf::Transformable
 {
 public:
-    SpriteSheet() = default;
+    SpriteSheet() : m_tile_size(0), m_tileset_cols(0), m_tileset_rows(0) {}
     SpriteSheet(std::string file_name, int tile_size)
         : m_file_name(file_name), m_tile_size(tile_size) {}
 

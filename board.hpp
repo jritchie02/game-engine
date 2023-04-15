@@ -9,7 +9,7 @@
 class Board : public sf::Drawable, public sf::Transformable
 {
 public:
-    Board() = default;
+    Board() : m_tile_size(0), m_board_width(0), m_board_height(0) {}
 
     Board(int tileSize, int width, int height) : m_tile_size(tileSize), m_board_width(width), m_board_height(height) {}
 
@@ -30,9 +30,9 @@ public:
     }
 
 private:
-    int m_tile_size = 32;
-    int m_board_width = 60;
-    int m_board_height = 32;
+    int m_tile_size;
+    int m_board_width;
+    int m_board_height;
     std::vector<sf::RectangleShape> m_tiles;
     sf::VertexArray m_background;
 
