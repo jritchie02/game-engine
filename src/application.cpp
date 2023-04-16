@@ -9,7 +9,7 @@ bool Application::loop()
     }
 
     m_board.initBoard();
-
+    
     sf::Clock deltaClock;
 
     while (m_window.isOpen())

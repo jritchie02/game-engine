@@ -19,6 +19,8 @@ public:
         larger square is a unique color to create a grid line effect.
     */
     void initBoard();
+
+    void update_background(int top_left, int top_right, int bottom_left);
     const int m_tile_size;
     const int m_board_width;
     const int m_board_height;

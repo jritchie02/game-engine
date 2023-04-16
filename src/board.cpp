@@ -32,3 +32,38 @@ void Board::initBoard()
         }
     }
 }
+
+void Board::update_background(int top_left, int top_right, int bottom_left)
+{
+    // Create a single vertex array to represent the entire grid
+    m_background.setPrimitiveType(sf::Quads);
+
+    int relative_width = top_right - top_left;
+    int relative_height = bottom_left - top_left;
+
+    for (int x = top_left; x < relative_width; x++)
+    {
+        for (int y = top_left; y < relative_height; y++)
+        {
+            // Define the vertices of the current cell
+            sf::Vector2f topLeft(y * m_tile_size, x * m_tile_size);
+            sf::Vector2f topRight((y + 1) * m_tile_size, x * m_tile_size);
+            sf::Vector2f bottomRight((y + 1) * m_tile_size, (x + 1) * m_tile_size);
+            sf::Vector2f bottomLeft(y * m_tile_size, (x + 1) * m_tile_size);
+
+            // Add the vertices of cell with background outline color
+            sf::Color grid_outline_color(18, 18, 18);
+            m_background.append(sf::Vertex(topLeft, grid_outline_color));
+            m_background.append(sf::Vertex(topRight, grid_outline_color));
+            m_background.append(sf::Vertex(bottomRight, grid_outline_color));
+            m_background.append(sf::Vertex(bottomLeft, grid_outline_color));
+
+            // Add vertices of cell with the cell color
+            sf::Color grid_cell_color(30, 48, 74);
+            m_background.append(sf::Vertex(sf::Vector2f(topLeft.x + 1, topLeft.y + 1), grid_cell_color));
+            m_background.append(sf::Vertex(sf::Vector2f(topRight.x - 1, topRight.y + 1), grid_cell_color));
+            m_background.append(sf::Vertex(sf::Vector2f(bottomRight.x - 1, bottomRight.y - 1), grid_cell_color));
+            m_background.append(sf::Vertex(sf::Vector2f(bottomLeft.x + 1, bottomLeft.y - 1), grid_cell_color));
+        }
+    }
+}
