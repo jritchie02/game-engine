@@ -1,8 +1,8 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "include/imgui.h"
-#include "include/imgui-SFML.h"
+#include "../include/imgui.h"
+#include "../include/imgui-SFML.h"
 #include "spritesheet.hpp"
 #include "board.hpp"
 #include "exceptions.hpp"
