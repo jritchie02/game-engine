@@ -20,13 +20,35 @@ public:
     bool loop();
 
 private:
+    /*
+        Handles user input. Returns false if the window is closed. If the mouse is
+        clicked on the grid after delegates to the spritesheet add_tile function
+    */
     int input();
+
+    /*
+        Calls all of the ImGui helper methods. Responsible for the entire panel
+    */
     void gui();
+
+    // Gui import section with file path, tile size and import button
+    void gui_import_section();
+    // Gui export section with file path and export button
+    void gui_export_section();
+    // Gui grid section. Subdivides the SpriteSheet texture into selectable grid elements
+    void gui_grid_section();
+
+    /*
+        Updates the window with the SFML drawing functions. The window calls draw on the
+        board every loop and on the spritesheet if the tile set has been imported
+    */
     void render();
 
     sf::RenderWindow m_window;
     SpriteSheet m_sprite_sheet;
     Board m_board;
+
+    // Gui fields to track error messages and application state
     bool m_imported_sheet = false;
     bool m_size_error_msg = false;
     bool m_file_error_msg = false;

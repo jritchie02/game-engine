@@ -34,10 +34,8 @@ bool Application::loop()
     return true;
 }
 
-void Application::gui()
+void Application::gui_import_section()
 {
-    ImGui::Begin("Import Section");
-
     ImGui::Text("Enter image tile size in px and file path:");
     static char file_path[128] = "";
     ImGui::InputText("File Path", file_path, 128);
@@ -70,17 +68,22 @@ void Application::gui()
         }
         catch (const std::exception &ex)
         {
+            // If an integer is not entered display tile size error
             if (dynamic_cast<const std::invalid_argument *>(&ex))
             {
                 m_size_error_msg = true;
             }
+            // If file path is not valid catch sprite error
             if (dynamic_cast<const engine::SpriteError *>(&ex))
             {
                 m_file_error_msg = true;
             }
         }
     }
+}
 
+void Application::gui_export_section()
+{
     static char export_path[128] = "";
     ImGui::InputText("Export File Path", export_path, 128);
 
@@ -88,15 +91,18 @@ void Application::gui()
     {
         m_sprite_sheet.export_world(export_path);
     }
+}
 
+void Application::gui_grid_section()
+{
     if (m_imported_sheet)
     {
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-        static int value = 32;   // Initial value
-        const int minValue = 8;  // Minimum value
-        const int maxValue = 64; // Maximum value
+        static int value = 32;   // Initial scale value
+        const int minValue = 8;  // Minimum scale value
+        const int maxValue = 64; // Maximum scale value
 
         ImGui::SliderInt("Scale", &value, minValue, maxValue);
 
@@ -149,7 +155,14 @@ void Application::gui()
         ImGui::EndTable();
         ImGui::EndChild();
     }
+}
 
+void Application::gui()
+{
+    ImGui::Begin("Options");
+    gui_import_section();
+    gui_export_section();
+    gui_grid_section();
     ImGui::End();
 }
 

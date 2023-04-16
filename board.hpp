@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 class Board : public sf::Drawable, public sf::Transformable
 {
