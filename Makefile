@@ -34,4 +34,5 @@ src/spritesheet_tests.exe: src/spritesheet.cpp src/spritesheet_tests.cpp
 
 clean:
 	rm -vf *.exe *.out.txt *.o
+	rm -vf src/*.o
 
