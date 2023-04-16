@@ -33,9 +33,16 @@ https://github.com/SFML/imgui-sfml
 
 ## Demo
 - Initial Engine Window
-- Adding SpriteSheet Information
-- Selecting Tile to Draw
+<img width="960" alt="InitialScreenShot" src="https://user-images.githubusercontent.com/91036922/232346284-e3dc9ec1-c4a8-4c36-af8e-12e4a46bbf27.PNG">
+
+- Importing the SpriteSheet
+<img width="960" alt="PostImport" src="https://user-images.githubusercontent.com/91036922/232346323-32515aed-9e2c-478a-bd2f-284d4e461a6c.PNG">
+
+- Drawing Viewport
+<img width="959" alt="DrawingWorld" src="https://user-images.githubusercontent.com/91036922/232346333-3730ee06-3b80-4e64-bc1c-f88c73c6f446.PNG">
+
 - Exporting Image
+<img width="960" alt="Export" src="https://user-images.githubusercontent.com/91036922/232346337-cb68efb8-0d55-4a6d-a1ef-c06ba50c6e60.PNG">
 
 ## Code
 **Application.cpp**
