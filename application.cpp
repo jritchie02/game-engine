@@ -22,7 +22,7 @@ bool Application::loop()
 
         // Update Window
         ImGui::SFML::Update(m_window, deltaClock.restart());
-       
+
         // Render GUI
         gui();
 
@@ -61,13 +61,12 @@ void Application::gui()
             int tile_size_int = std::stoi(tile_size);
             SpriteSheet sprite_sheet(file_path, tile_size_int);
 
-            if (sprite_sheet.import(m_board))
-            {
-                m_size_error_msg = false;
-                m_file_error_msg = false;
-                m_sprite_sheet = sprite_sheet;
-                m_imported_sheet = true;
-            }
+            sprite_sheet.import(m_board);
+
+            m_size_error_msg = false;
+            m_file_error_msg = false;
+            m_sprite_sheet = sprite_sheet;
+            m_imported_sheet = true;
         }
         catch (const std::exception &ex)
         {
@@ -95,7 +94,7 @@ void Application::gui()
         // Create a child window with scrolling
         ImGui::BeginChild("Tileset", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-        static int value = 32;          // Initial value
+        static int value = 32;   // Initial value
         const int minValue = 8;  // Minimum value
         const int maxValue = 64; // Maximum value
 
@@ -144,7 +143,6 @@ void Application::gui()
                     ImGui::PopStyleVar();
                 }
 
-                // Pop the ID after using it for this button
                 ImGui::PopID();
             }
         }

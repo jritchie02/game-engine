@@ -6,8 +6,6 @@ void Board::initBoard()
     // Create a single vertex array to represent the entire grid
     m_background.setPrimitiveType(sf::Quads);
 
-    m_tiles.resize(m_board_height * m_board_width);
-
     for (int x = 0; x < m_board_height; x++)
     {
         for (int y = 0; y < m_board_width; y++)

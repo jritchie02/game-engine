@@ -1,8 +1,7 @@
 #include "spritesheet.hpp"
-#include <iostream>
 #include <cmath>
 
-bool SpriteSheet::import(Board& board)
+void SpriteSheet::import(Board &board)
 {
 
     if (!m_tilesetTexture.loadFromFile(m_file_name))
@@ -13,24 +12,19 @@ bool SpriteSheet::import(Board& board)
     m_tileset_cols = std::round(m_tilesetTexture.getSize().x / m_tile_size);
     m_tileset_rows = std::round(m_tilesetTexture.getSize().y / m_tile_size);
 
-    m_boardHeight = board.get_board_height();
-    m_boardWidth = board.get_board_width();
-    m_board_tileWidth = board.get_board_tile_size();
+    m_boardHeight = board.m_board_height;
+    m_boardWidth = board.m_board_width;
+    m_board_tileWidth = board.m_tile_size;
 
     m_tile_ids.resize(m_boardWidth * m_boardHeight, -1);
-    return true;
 }
 
-/*
-    Given an int array of tile indexes, converts each index into a sf::Vertex where
-    the texture is mapped from the imported image in m_tilesetTexture
-*/
 void SpriteSheet::merge_tiles()
 {
     // resize the vertex array to fit the level size
     m_drawn_tiles.setPrimitiveType(sf::Quads);
     m_drawn_tiles.resize(m_boardWidth * m_boardHeight * 4);
-   
+
     // populate the vertex array, with one quad per tile
     for (int i = 0; i < m_boardWidth; ++i)
     {
@@ -82,7 +76,6 @@ void SpriteSheet::export_world(std::string file_name)
     sf::RenderTexture renderTexture;
     int width = m_boardWidth * m_board_tileWidth;   // Width of the image
     int height = m_boardHeight * m_board_tileWidth; // Height of the image
-
 
     renderTexture.create(width, height);
     renderTexture.setActive(true);               // Activate the render texture

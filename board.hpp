@@ -13,27 +13,17 @@ public:
 
     Board(int tileSize, int width, int height) : m_tile_size(tileSize), m_board_width(width), m_board_height(height) {}
 
+    /*
+        Updates this boards vertex array to create a grid of empty tiles. The "grid lines"
+        are created by drawing two squares in each cell one pixel different in size. The
+        larger square is a unique color to create a grid line effect.
+    */
     void initBoard();
-
-    int get_board_width()
-    {
-        return m_board_width;
-    }
-
-    int get_board_height()
-    {
-        return m_board_height;
-    }
-
-    int get_board_tile_size() {
-        return m_tile_size;
-    }
+    const int m_tile_size;
+    const int m_board_width;
+    const int m_board_height;
 
 private:
-    int m_tile_size;
-    int m_board_width;
-    int m_board_height;
-    std::vector<sf::RectangleShape> m_tiles;
     sf::VertexArray m_background;
 
     // mark as override TODO
