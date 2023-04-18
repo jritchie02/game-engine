@@ -1,5 +1,6 @@
 #include "application.hpp"
 #include <iostream>
+using namespace engine;
 
 bool Application::loop()
 {
@@ -9,7 +10,7 @@ bool Application::loop()
     }
 
     m_board.initBoard();
-    
+
     sf::Clock deltaClock;
 
     while (m_window.isOpen())

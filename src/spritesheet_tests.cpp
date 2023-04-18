@@ -5,22 +5,23 @@
 #include <iostream>
 
 using std::operator""s;
+using namespace engine;
 
 TEST(board_constructor)
 {
     Board board;
     
     // Width/Height zero, default tile size 32
-    ASSERT_EQUAL(0, board.get_board_height());
-    ASSERT_EQUAL(0, board.get_board_width());
-    ASSERT_EQUAL(0, board.get_board_tile_size());
+    ASSERT_EQUAL(0, board.m_board_height);
+    ASSERT_EQUAL(0, board.m_board_width);
+    ASSERT_EQUAL(0, board.m_tile_size);
 
     Board board2(8, 20, 10);
     
     // Width/Height zero, default tile size 32
-    ASSERT_EQUAL(10, board2.get_board_height());
-    ASSERT_EQUAL(20, board2.get_board_width());
-    ASSERT_EQUAL(8, board2.get_board_tile_size());
+    ASSERT_EQUAL(10, board2.m_board_height);
+    ASSERT_EQUAL(20, board2.m_board_width);
+    ASSERT_EQUAL(8, board2.m_tile_size);
 }
 
 TEST(spritesheet_import)
@@ -37,7 +38,7 @@ TEST(spritesheet_import)
     ASSERT_EQUAL(8, sheet2.get_tile_size());
 
     // Test importing file updates sheet width/height/texture info
-    ASSERT_EQUAL(true, sheet2.import(board));
+    sheet2.import(board);
 
     ASSERT_EQUAL(9, sheet2.get_sheet_height());
     ASSERT_EQUAL(7, sheet2.get_sheet_width());
@@ -56,7 +57,7 @@ TEST(spritesheet_assignment)
     sheet = sheet2;
 
     // Check the original sheet has correct member values
-    ASSERT_EQUAL(true, sheet.import(board));
+    sheet.import(board);
 
     ASSERT_EQUAL(9, sheet.get_sheet_height());
     ASSERT_EQUAL(7, sheet.get_sheet_width());

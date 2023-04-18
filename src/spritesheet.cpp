@@ -1,8 +1,11 @@
 #include "spritesheet.hpp"
 #include <cmath>
+using namespace engine; 
 
 void SpriteSheet::import(Board &board)
 {
+
+    m_file_name = "./images/" + m_file_name;
 
     if (!m_tilesetTexture.loadFromFile(m_file_name))
     {
